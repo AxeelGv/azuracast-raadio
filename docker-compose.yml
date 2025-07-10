@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  azuracast:
+    image: azuracast/azuracast:latest
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - TZ=America/Managua
+      - LANG=es_ES.UTF-8
+      - HTTP_PORT=80
+    volumes:
+      - azuracast_station_data:/var/azuracast/stations
+      - azuracast_db_data:/var/lib/mysql
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10.4
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD=azuracast
+      MYSQL_DATABASE=azuracast
+      MYSQL_USER=azuracast
+      MYSQL_PASSWORD=azuracast
+    volumes:
+      - azuracast_db_data:/var/lib/mysql
+
+volumes:
+  azuracast_station_data:
+  azuracast_db_data:
